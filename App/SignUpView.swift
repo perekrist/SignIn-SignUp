@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct SignUpView: View {
     
@@ -16,9 +17,10 @@ struct SignUpView: View {
     @State var isHiding = true
     @State var isHidingR = true
     
+    @State var success = false
+    
     var body: some View {
         VStack {
-            
             VStack {
                 HStack {
                     Image(systemName: "envelope")
@@ -73,7 +75,7 @@ struct SignUpView: View {
                 .padding()
             
             Button(action: {
-                
+                self.register()
             }) {
                 Text("SIGNUP")
                     .padding()
@@ -88,8 +90,34 @@ struct SignUpView: View {
                 
             
         }
+        .sheet(isPresented: self.$success) {
+            HomeView()
+        }
         
     }
+    
+    func register() {
+        if self.email != "" {
+            if self.password == self.rePassword {
+                Auth.auth().createUser(withEmail: self.email, password: self.password) { (res, error) in
+                    if error != nil {
+                        print(error?.localizedDescription)
+                        return
+                    }
+                    print("Success")
+                    UserDefaults.standard.set(true, forKey: "status")
+                    NotificationCenter.default.post(name: NSNotification.Name("status"), object: nil)
+                    self.success.toggle()
+                    
+                }
+            } else {
+                print("Password mi smatch")
+            }
+        } else {
+            print("Fill the email")
+        }
+    }
+    
 }
 
 struct SignUpView_Previews: PreviewProvider {

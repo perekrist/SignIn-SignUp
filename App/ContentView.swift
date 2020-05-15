@@ -13,7 +13,8 @@ struct ContentView: View {
     @State var tag = 0
     
     var body: some View {
-        ZStack {
+        NavigationView {
+            ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -80,6 +81,9 @@ struct ContentView: View {
                         
                 }
             }
+        }
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
         }
     }
 }

@@ -7,8 +7,11 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct LoginView: View {
+    
+    @State var success = false
     
     @State var email = ""
     @State var password = ""
@@ -16,7 +19,6 @@ struct LoginView: View {
     
     var body: some View {
         VStack {
-            
             VStack {
                 HStack {
                     Image(systemName: "envelope")
@@ -50,7 +52,18 @@ struct LoginView: View {
             .padding()
             
             Button(action: {
-                
+                Auth.auth().signIn(withEmail: self.email, password: self.password) { (res, error) in
+                    
+                    if error != nil {
+                        print(error?.localizedDescription)
+                        return
+                    }
+                    print("Success")
+                    UserDefaults.standard.set(true, forKey: "status")
+                    NotificationCenter.default.post(name: NSNotification.Name("status"), object: nil)
+                    self.success.toggle()
+                    
+                }
             }) {
                 Text("LOGIN")
                     .padding()
@@ -74,7 +87,9 @@ struct LoginView: View {
                 
             
         }
-        
+        .sheet(isPresented: self.$success) {
+            HomeView()
+        }
     }
 }
 
