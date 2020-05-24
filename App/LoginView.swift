@@ -31,7 +31,11 @@ struct LoginView: View {
                 HStack {
                     Image(systemName: "lock")
                         .padding()
-                    TextField("Password", text: $password)
+                    if self.isHiding {
+                        TextField("Password", text: $password)
+                    } else {
+                        SecureField("Password", text: $password)
+                    }
                     
                     Button(action: {
                         self.isHiding.toggle()
